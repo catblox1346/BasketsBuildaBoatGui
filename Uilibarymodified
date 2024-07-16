@@ -1262,7 +1262,6 @@ local function findBrowsingTopMost()
     end
     return result
 end
-
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 
@@ -1285,11 +1284,12 @@ local dragger = {} do
 
         local function onInputChanged(input)
             if held then
-                local delta = input.Position - startInputPosition
-                local newPosition = startPosition + delta
-                local newX = math.clamp(newPosition.X, 0, workspace.CurrentCamera.ViewportSize.X - frame.Size.X.Offset)
-                local newY = math.clamp(newPosition.Y, 0, workspace.CurrentCamera.ViewportSize.Y - frame.Size.Y.Offset)
+                local currentMousePos = UserInputService:GetMouseLocation()
+                local delta = currentMousePos - startInputPosition
+                local newX = math.clamp(startPosition.X.Offset + delta.X, 0, workspace.CurrentCamera.ViewportSize.X - frame.Size.X.Offset)
+                local newY = math.clamp(startPosition.Y.Offset + delta.Y, 0, workspace.CurrentCamera.ViewportSize.Y - frame.Size.Y.Offset)
                 frame.Position = UDim2.new(0, newX, 0, newY)
+                frame:FindFirstChild("PositionLabel").Text = string.format("(0, %d, 0, %d)", newX, newY)
             end
         end
 
@@ -1304,7 +1304,7 @@ local dragger = {} do
                 if draggerCache[frame] then
                     held = true
                     startPosition = frame.Position
-                    startInputPosition = input.Position
+                    startInputPosition = UserInputService:GetMouseLocation()
 
                     input.Changed:Connect(function()
                         if input.UserInputState == Enum.UserInputState.End then
@@ -1318,7 +1318,6 @@ local dragger = {} do
         UserInputService.InputChanged:Connect(onInputChanged)
     end
 end
-
 local function betweenOpenInterval(n, n1, n2)
     return n <= n2 and n >= n1
 end
