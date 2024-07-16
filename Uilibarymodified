@@ -1289,7 +1289,6 @@ local dragger = {} do
                 local newX = math.clamp(startPosition.X.Offset + delta.X, 0, workspace.CurrentCamera.ViewportSize.X - frame.Size.X.Offset)
                 local newY = math.clamp(startPosition.Y.Offset + delta.Y, 0, workspace.CurrentCamera.ViewportSize.Y - frame.Size.Y.Offset)
                 frame.Position = UDim2.new(0, newX, 0, newY)
-                frame:FindFirstChild("PositionLabel").Text = string.format("(0, %d, 0, %d)", newX, newY)
             end
         end
 
