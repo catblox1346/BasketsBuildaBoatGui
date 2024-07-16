@@ -1265,10 +1265,12 @@ end
 
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
-local mouse = game.Players.LocalPlayer:GetMouse() -- Assumes a single LocalPlayer
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local mouse = player:GetMouse()
 
 local dragger = {} do
-    local draggerCache = { }
+    local draggerCache = {}
 
     function dragger.new(frame)
         local held = false
@@ -1288,12 +1290,15 @@ local dragger = {} do
             local objectPosition = Vector2.new(mousePos.X - framePos.X, mousePos.Y - framePos.Y)
             held = true
 
-            RunService.Heartbeat:Connect(function()
+            local connection
+            connection = RunService.Heartbeat:Connect(function()
                 if held then
                     local currentMousePos = UserInputService:GetMouseLocation()
-                    local newX = math.clamp(currentMousePos.X - objectPosition.X, 0, workspace.CurrentCamera.ViewportSize.X - frame.Size.X.Offset)
-                    local newY = math.clamp(currentMousePos.Y - objectPosition.Y, 0, workspace.CurrentCamera.ViewportSize.Y - frame.Size.Y.Offset)
+                    local newX = math.clamp(currentMousePos.X - objectPosition.X, 0, workspace.CurrentCamera.ViewportSize.X - frame.AbsoluteSize.X)
+                    local newY = math.clamp(currentMousePos.Y - objectPosition.Y, 0, workspace.CurrentCamera.ViewportSize.Y - frame.AbsoluteSize.Y)
                     frame.Position = UDim2.new(0, newX, 0, newY)
+                else
+                    connection:Disconnect()
                 end
             end)
         end
