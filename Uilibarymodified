@@ -1265,15 +1265,14 @@ end
 
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local mouse = player:GetMouse()
 
 local dragger = {} do
     local draggerCache = {}
 
     function dragger.new(frame)
         local held = false
+        local startPosition
+        local startInputPosition
         frame.Active = true
 
         frame.MouseLeave:Connect(function()
@@ -1284,48 +1283,39 @@ local dragger = {} do
             draggerCache[frame] = true
         end)
 
-        local function startDrag(input)
-            local mousePos = Vector2.new(input.Position.X, input.Position.Y)
-            local framePos = frame.AbsolutePosition
-            local objectPosition = Vector2.new(mousePos.X - framePos.X, mousePos.Y - framePos.Y)
-            held = true
-
-            local connection
-            connection = RunService.Heartbeat:Connect(function()
-                if held then
-                    local currentMousePos = UserInputService:GetMouseLocation()
-                    local newX = math.clamp(currentMousePos.X - objectPosition.X, 0, workspace.CurrentCamera.ViewportSize.X - frame.AbsoluteSize.X)
-                    local newY = math.clamp(currentMousePos.Y - objectPosition.Y, 0, workspace.CurrentCamera.ViewportSize.Y - frame.AbsoluteSize.Y)
-                    frame.Position = UDim2.new(0, newX, 0, newY)
-                else
-                    connection:Disconnect()
-                end
-            end)
+        local function onInputChanged(input)
+            if held then
+                local delta = input.Position - startInputPosition
+                local newPosition = startPosition + delta
+                local newX = math.clamp(newPosition.X, 0, workspace.CurrentCamera.ViewportSize.X - frame.Size.X.Offset)
+                local newY = math.clamp(newPosition.Y, 0, workspace.CurrentCamera.ViewportSize.Y - frame.Size.Y.Offset)
+                frame.Position = UDim2.new(0, newX, 0, newY)
+            end
         end
 
-        local function stopDrag()
-            held = false
+        local function onInputEnded(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                held = false
+            end
         end
 
         frame.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 if draggerCache[frame] then
-                    startDrag(input)
+                    held = true
+                    startPosition = frame.Position
+                    startInputPosition = input.Position
+
+                    input.Changed:Connect(function()
+                        if input.UserInputState == Enum.UserInputState.End then
+                            onInputEnded(input)
+                        end
+                    end)
                 end
             end
         end)
 
-        frame.InputEnded:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                stopDrag()
-            end
-        end)
-
-        UserInputService.InputEnded:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                stopDrag()
-            end
-        end)
+        UserInputService.InputChanged:Connect(onInputChanged)
     end
 end
 
