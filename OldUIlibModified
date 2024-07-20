@@ -1,5 +1,5 @@
 
-print('worked')
+print('updated')
 
 local CoreGui = game:GetService("CoreGui")
 local TweenService = game:GetService("TweenService")
@@ -561,17 +561,20 @@ tabFrame.Size = UDim2.new(0, 107, 0, 23)
 tabFrame.ZIndex = 2
 tabFrame.Parent = tabButton
 
-tabFrame.MouseEnter:Connect(function()
-    if TabSelected ~= tabFrame or TabSelected == nil then
+local UserInputService = game:GetService("UserInputService")
+
+tabFrame.InputBegan:Connect(function(input)
+    if (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) and (TabSelected ~= tabFrame or TabSelected == nil) then
         TweenService:Create(tabFrame, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = .93}):Play()
     end
 end)
 
-tabFrame.MouseLeave:Connect(function()
-    if TabSelected ~= tabFrame or TabSelected == nil then
+tabFrame.InputEnded:Connect(function(input)
+    if (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) and (TabSelected ~= tabFrame or TabSelected == nil) then
         TweenService:Create(tabFrame, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = .96}):Play()
     end
 end)
+
 
 local tabTextButton = Instance.new("TextButton")
 tabTextButton.Name = "TabTextButton"
@@ -1850,4 +1853,3 @@ return window
 end
 
 return library
-
