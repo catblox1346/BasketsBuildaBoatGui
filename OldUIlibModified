@@ -1,5 +1,5 @@
 
-print('updated')
+print('worked')
 
 local CoreGui = game:GetService("CoreGui")
 local TweenService = game:GetService("TweenService")
@@ -583,7 +583,7 @@ tabTextButton.Text = ""
 tabTextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
 tabTextButton.TextSize = 14
 tabTextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-tabTextButton.BackgroundTransparency = 1
+tabTextButton.BackgroundTransparency = 0
 tabTextButton.Size = UDim2.new(0, 107, 0, 23)
 tabTextButton.Parent = tabFrame
 
