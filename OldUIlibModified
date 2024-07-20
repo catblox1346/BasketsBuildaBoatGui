@@ -364,8 +364,7 @@ local function closeUI()
     tooltipScreenGui:Destroy()
 end
 
-closeButton.MouseButton1Click:Connect(closeUI)
-closeButton.TouchTap:Connect(closeUI)
+closeButton.Activated:Connect(closeUI)
 
 
 closeButton.MouseEnter:Connect(function()
@@ -421,8 +420,7 @@ local function toggleMinimize()
     TweenService:Create(main, TweenInfo.new(.2, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Size = Opened and UDim2.new(0, 450, 0, 321) or UDim2.new(0, 450, 0, 30)}):Play()
 end
 
-minimizeButton.MouseButton1Click:Connect(toggleMinimize)
-minimizeButton.TouchTap:Connect(toggleMinimize)
+minimizeButton.Activated:Connect(toggleMinimize)
 
 
 local editButton = Instance.new("ImageButton")
@@ -503,8 +501,7 @@ local function toggleEdit()
     end
 end
 
-editButton.MouseButton1Click:Connect(toggleEdit)
-editButton.TouchTap:Connect(toggleEdit)
+editButton.Activated:Connect(toggleEdit)
 
 
 local tabContainer = Instance.new("Frame")
@@ -807,8 +804,7 @@ local function toggleSection()
     TweenService:Create(sectionIcon, TweenInfo.new(.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Rotation = Closed.Value and 45 or 0}):Play()
 end
 
-sectionButton.MouseButton1Click:Connect(toggleSection)
-sectionButton.TouchTap:Connect(toggleSection)
+sectionButton.Activated:Connect(toggleSection)
 
 function sectiontable:Label(Info)
 Info.Text = Info.Text or "Label"
@@ -953,9 +949,7 @@ local function startKeybindChange()
     end)
 end
 
-keybindButton.MouseButton1Click:Connect(startKeybindChange)
-keybindButton.TouchTap:Connect(startKeybindChange)
-
+keybindButton.Activated:Connect(startKeybindChange)
 
 UserInputService.InputBegan:Connect(function(Key, gameProcessed)
     if not Changing and Key.KeyCode == PressKey and not gameProcessed then
@@ -1015,8 +1009,7 @@ local function onClick()
     end)
 end
 
-textButton.MouseButton1Click:Connect(onClick)
-textButton.TouchTap:Connect(onClick)
+textButton.Activated:Connect(onClick)
 
 end
 
@@ -1192,8 +1185,7 @@ local function toggleState()
     insidetoggle:Set(Toggled)
 end
 
-toggleButton.MouseButton1Click:Connect(toggleState)
-toggleButton.TouchTap:Connect(toggleState)
+toggleButton.Activated:Connect(toggleState)
 
 
 return insidetoggle
@@ -1489,8 +1481,7 @@ local function updateDropdown()
     TweenService:Create(section, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Size = DropdownOpened and UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset + DropdownYSize - 27 + 4) or UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset - DropdownYSize + 31)}):Play()
 end
 
-dropdownContainerTextButton.MouseButton1Click:Connect(updateDropdown)
-dropdownContainerTextButton.TouchTap:Connect(updateDropdown)
+dropdownContainerTextButton.Activated:Connect(updateDropdown)
 
 end
 
@@ -1552,8 +1543,7 @@ local function toggleDropdown()
     TweenService:Create(section, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Size = DropdownOpened and UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset + DropdownYSize - 27 + 4) or UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset - DropdownYSize + 31)}):Play()
 end
 
-dropdownButton.MouseButton1Click:Connect(toggleDropdown)
-dropdownButton.TouchTap:Connect(toggleDropdown)
+dropdownButton.Activated:Connect(toggleDropdown)
 
 
 return insidedropdown
@@ -1744,20 +1734,20 @@ radio.MouseLeave:Connect(function()
     end
 end)
 
-radioTextButton.MouseButton1Click:Connect(function()
+radioTextButton.Activated:Connect(function()
     task.spawn(function()
         pcall(Info.Callback, radioText.Text)
     end)
     if Info.Flag ~= nil then
         library.Flags[Info.Flag] = radioText.Text
-	end
+    end
     
     ColorElements[radioInner].Enabled = true
     ColorElements[radioOuter].Enabled = true
     
     RadioSelected = radio
     
-    for _,v in pairs(radioContainer:GetChildren()) do
+    for _, v in pairs(radioContainer:GetChildren()) do
         if v.ClassName == "Frame" and v ~= radio then
             ColorElements[v.RadioOuter].Enabled = false
             ColorElements[v.RadioOuter.RadioInner].Enabled = false
@@ -1775,6 +1765,7 @@ radioTextButton.MouseButton1Click:Connect(function()
     end
 end)
 
+
 end
 
 local function toggleRadio()
@@ -1789,8 +1780,7 @@ local function toggleRadio()
     TweenService:Create(sectionFrame, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Size = RadioOpened and UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset + RadioYSize - 27) or UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset - RadioYSize + 27)}):Play()
     TweenService:Create(section, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Size = RadioOpened and UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset + RadioYSize - 27 + 4) or UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset - RadioYSize + 31)}):Play()
 end
-radioButtonTextButton.MouseButton1Click:Connect(toggleRadio)
-radioButtonTextButton.TouchTap:Connect(toggleRadio)
+radioButtonTextButton.Activated:Connect(toggleRadio)
 
 
 for _,v in pairs(Info.Options) do
