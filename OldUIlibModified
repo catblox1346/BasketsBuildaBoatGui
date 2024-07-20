@@ -393,13 +393,19 @@ minimizeButton.Size = UDim2.new(0, 17, 0, 17)
 minimizeButton.ZIndex = 2
 minimizeButton.Parent = topbar
 
-minimizeButton.MouseEnter:Connect(function()
+local function onHoverStart()
     TweenService:Create(minimizeButton, TweenInfo.new(.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageColor3 = Color3.fromRGB(194, 162, 76)}):Play()
-end)
+end
 
-minimizeButton.MouseLeave:Connect(function()
+local function onHoverEnd()
     TweenService:Create(minimizeButton, TweenInfo.new(.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageColor3 = Color3.fromRGB(217, 217, 217)}):Play()
-end)
+end
+
+minimizeButton.MouseEnter:Connect(onHoverStart)
+minimizeButton.MouseLeave:Connect(onHoverEnd)
+minimizeButton.TouchTap:Connect(onHoverStart)  -- Start hover effect on touch
+minimizeButton.TouchEnded:Connect(onHoverEnd)  -- End hover effect on touch
+
 
 local Opened = true
 
