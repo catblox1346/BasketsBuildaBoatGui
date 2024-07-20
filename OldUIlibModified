@@ -359,13 +359,10 @@ closeButton.Size = UDim2.new(0, 17, 0, 17)
 closeButton.ZIndex = 2
 closeButton.Parent = topbar
 
-local function closeUI()
+closeButton.activated:Once(function()
     shamanScreenGui:Destroy()
     tooltipScreenGui:Destroy()
-end
-
-closeButton.Activated:Connect(closeUI)
-
+end)
 
 closeButton.MouseEnter:Connect(function()
     TweenService:Create(closeButton, TweenInfo.new(.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageColor3 = Color3.fromRGB(217, 97, 99)}):Play()
@@ -396,32 +393,28 @@ end)
 
 local Opened = true
 
-local function toggleMinimize()
+minimizeButton.MouseButton1Click:Connect(function()
     Opened = not Opened
     
     topbar.Frame.Visible = Opened
-    
     task.spawn(function()
-        if Opened then
-            wait(.15)
+    if Opened then
+        wait(.15)
+    end
+    for _,v in pairs(main:GetChildren()) do
+        if v.Name == "TabContainer" then
+            v.Visible = Opened
         end
-        for _, v in pairs(main:GetChildren()) do
-            if v.Name == "TabContainer" then
-                v.Visible = Opened
-            end
-        end
-        for _, v in pairs(main:GetChildren()) do
-            if (v.Name == "LeftContainer" or v.Name == "RightContainer") and v.Visible then
-                v.Size = Opened and UDim2.new(0, 168, 0, 287) or UDim2.new(0, 168, 0, 0)
-            end
-        end
+    end
+    for _,v in pairs(main:GetChildren()) do
+       if v.Name == "LeftContainer" or v.Name == "RightContainer" and v.Visible then
+           v.Size = Opened and UDim2.new(0, 168,0, 287) or UDim2.new(0, 168,0, 0)
+       end
+    end
     end)
     
-    TweenService:Create(main, TweenInfo.new(.2, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Size = Opened and UDim2.new(0, 450, 0, 321) or UDim2.new(0, 450, 0, 30)}):Play()
-end
-
-minimizeButton.Activated:Connect(toggleMinimize)
-
+    TweenService:Create(main, TweenInfo.new(.2, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Size = Opened and UDim2.new(0, 450,0, 321) or UDim2.new(0, 450,0, 30)}):Play()
+end)
 
 local editButton = Instance.new("ImageButton")
 editButton.Name = "EditButton"
@@ -477,32 +470,29 @@ editButton.MouseLeave:Connect(function()
     end
 end)
 
-local function toggleEdit()
+editButton.MouseButton1Click:Connect(function()
     EditOpened = not EditOpened
     
-    uiGradient.Enabled = EditOpened
+    uiGradient.Enabled = EditOpened and true or false
     
     if not EditOpened then
         for frame, v in pairs(ColorElements) do
             if v.Enabled then
                 if frame.ClassName == "Frame" then
-                    TweenService:Create(frame, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundColor3 = Color3.fromRGB(48, 207, 106)}):Play()
+                TweenService:Create(frame, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundColor3 = Color3.fromRGB(48, 207, 106)}):Play()
                 else
-                    TweenService:Create(frame, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageColor3 = Color3.fromRGB(48, 207, 106)}):Play()
+                TweenService:Create(frame, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageColor3 = Color3.fromRGB(48, 207, 106)}):Play()
                 end
             end
         end
     else
-        for _, v in pairs(ColorElements) do
+        for _,v in pairs(ColorElements) do
             if v.Type ~= "Toggle" then
                 v.Enabled = true
             end
         end
     end
-end
-
-editButton.Activated:Connect(toggleEdit)
-
+end)
 
 local tabContainer = Instance.new("Frame")
 tabContainer.Name = "TabContainer"
@@ -795,16 +785,16 @@ sectionIcon.Size = UDim2.new(0, 13, 0, 13)
 sectionIcon.ZIndex = 1
 sectionIcon.Parent = section
 
-local function toggleSection()
+sectionButton.MouseButton1Click:Connect(function()
     Closed.Value = not Closed.Value
+    --#d96163
+    
     
     TweenService:Create(section, TweenInfo.new(.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Size = Closed.Value and UDim2.new(0, 162, 0, SizeY + 4) or UDim2.new(0, 162, 0, 27)}):Play()
     TweenService:Create(sectionFrame, TweenInfo.new(.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Size = Closed.Value and UDim2.new(0, 162, 0, SizeY) or UDim2.new(0, 162, 0, 23)}):Play()
     TweenService:Create(sectionIcon, TweenInfo.new(.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageColor3 = Closed.Value and Color3.fromRGB(217, 97, 99) or Color3.fromRGB(217, 217, 217)}):Play()
     TweenService:Create(sectionIcon, TweenInfo.new(.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Rotation = Closed.Value and 45 or 0}):Play()
-end
-
-sectionButton.Activated:Connect(toggleSection)
+end)
 
 function sectiontable:Label(Info)
 Info.Text = Info.Text or "Label"
@@ -934,7 +924,7 @@ end)
 local KeybindConnection
 local Changing = false
 
-local function startKeybindChange()
+keybindButton.MouseButton1Click:Connect(function()
     if KeybindConnection then KeybindConnection:Disconnect() end
     Changing = true
     keybindFrameText.Text = "..."
@@ -947,9 +937,7 @@ local function startKeybindChange()
             Changing = false
         end
     end)
-end
-
-keybindButton.Activated:Connect(startKeybindChange)
+end)
 
 UserInputService.InputBegan:Connect(function(Key, gameProcessed)
     if not Changing and Key.KeyCode == PressKey and not gameProcessed then
@@ -1003,14 +991,11 @@ textButton.BackgroundTransparency = 1
 textButton.Size = UDim2.new(0, 162, 0, 27)
 textButton.Parent = button
 
-local function onClick()
+textButton.MouseButton1Click:Connect(function()
     task.spawn(function()
         pcall(Info.Callback)
     end)
-end
-
-textButton.Activated:Connect(onClick)
-
+end)
 end
 
 function sectiontable:Input(Info)
@@ -1180,13 +1165,10 @@ if Info.Default then
     end)
 end
 
-local function toggleState()
+toggleButton.MouseButton1Click:Connect(function()
     Toggled = not Toggled
     insidetoggle:Set(Toggled)
-end
-
-toggleButton.Activated:Connect(toggleState)
-
+end)
 
 return insidetoggle
 end
@@ -1459,17 +1441,15 @@ dropdownContainerTextButton.MouseLeave:Connect(function()
     TweenService:Create(dropdownbuttonText, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {TextColor3 = Color3.fromRGB(191, 191, 191)}):Play()
 end)
 
-local function updateDropdown()
+dropdownContainerTextButton.MouseButton1Click:Connect(function()
     DropdownOpened = false
     
     task.spawn(function()
         pcall(Info.Callback, dropdownbuttonText.Text)
     end)
-    
     if Info.Flag ~= nil then
         library.Flags[Info.Flag] = dropdownbuttonText.Text
-    end
-    
+	end
     dropdownText.Text = dropdownbuttonText.Text
     
     TweenService:Create(dropdownIcon, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Rotation = DropdownOpened and -180 or -90}):Play()
@@ -1479,10 +1459,7 @@ local function updateDropdown()
     TweenService:Create(dropdownContainer, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = DropdownOpened and .96 or 1}):Play()
     TweenService:Create(sectionFrame, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Size = DropdownOpened and UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset + DropdownYSize - 27) or UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset - DropdownYSize + 27)}):Play()
     TweenService:Create(section, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Size = DropdownOpened and UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset + DropdownYSize - 27 + 4) or UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset - DropdownYSize + 31)}):Play()
-end
-
-dropdownContainerTextButton.Activated:Connect(updateDropdown)
-
+end)
 end
 
 function insidedropdown:Refresh(RefreshInfo)
@@ -1531,7 +1508,7 @@ Closed:GetPropertyChangedSignal("Value"):Connect(function()
     end
 end)
 
-local function toggleDropdown()
+dropdownButton.MouseButton1Click:Connect(function()
     DropdownOpened = not DropdownOpened
     
     TweenService:Create(dropdownIcon, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Rotation = DropdownOpened and -180 or -90}):Play()
@@ -1541,10 +1518,7 @@ local function toggleDropdown()
     TweenService:Create(dropdownContainer, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = DropdownOpened and .96 or 1}):Play()
     TweenService:Create(sectionFrame, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Size = DropdownOpened and UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset + DropdownYSize - 27) or UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset - DropdownYSize + 27)}):Play()
     TweenService:Create(section, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Size = DropdownOpened and UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset + DropdownYSize - 27 + 4) or UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset - DropdownYSize + 31)}):Play()
-end
-
-dropdownButton.Activated:Connect(toggleDropdown)
-
+end)
 
 return insidedropdown
 end
@@ -1734,20 +1708,20 @@ radio.MouseLeave:Connect(function()
     end
 end)
 
-radioTextButton.Activated:Connect(function()
+radioTextButton.MouseButton1Click:Connect(function()
     task.spawn(function()
         pcall(Info.Callback, radioText.Text)
     end)
     if Info.Flag ~= nil then
         library.Flags[Info.Flag] = radioText.Text
-    end
+	end
     
     ColorElements[radioInner].Enabled = true
     ColorElements[radioOuter].Enabled = true
     
     RadioSelected = radio
     
-    for _, v in pairs(radioContainer:GetChildren()) do
+    for _,v in pairs(radioContainer:GetChildren()) do
         if v.ClassName == "Frame" and v ~= radio then
             ColorElements[v.RadioOuter].Enabled = false
             ColorElements[v.RadioOuter.RadioInner].Enabled = false
@@ -1765,10 +1739,9 @@ radioTextButton.Activated:Connect(function()
     end
 end)
 
-
 end
 
-local function toggleRadio()
+radioButtonTextButton.MouseButton1Click:Connect(function()
     RadioOpened = not RadioOpened
     
     TweenService:Create(radioButtonIcon, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageColor3 = RadioOpened and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(191, 191, 191)}):Play()
@@ -1779,9 +1752,7 @@ local function toggleRadio()
     TweenService:Create(radioContainer, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = RadioOpened and .96 or 1}):Play()
     TweenService:Create(sectionFrame, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Size = RadioOpened and UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset + RadioYSize - 27) or UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset - RadioYSize + 27)}):Play()
     TweenService:Create(section, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {Size = RadioOpened and UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset + RadioYSize - 27 + 4) or UDim2.new(0, 162, 0, sectionFrame.Size.Y.Offset - RadioYSize + 31)}):Play()
-end
-radioButtonTextButton.Activated:Connect(toggleRadio)
-
+end)
 
 for _,v in pairs(Info.Options) do
     insideradio:Button(v)
@@ -1808,16 +1779,16 @@ end
 return sectiontable
 end
 
-local function onTabSelected()
+tabTextButton.MouseButton1Click:Connect(function()
     TabSelected = tabFrame
     task.spawn(function()
-        for _, v in pairs(main:GetChildren()) do
-            if v.Name == "LeftContainer" or v.Name == "RightContainer" then
-                v.Visible = false
-            end
+    for _,v in pairs(main:GetChildren()) do
+        if v.Name == "LeftContainer" or v.Name == "RightContainer" then
+            v.Visible = false
         end
+    end
     end)
-    for _, v in pairs(scrollingContainer:GetChildren()) do
+    for _,v in pairs(scrollingContainer:GetChildren()) do
         if v ~= tabButton and v.Name == "TabButton" then
             TweenService:Create(v.TabFrame, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = .96}):Play()
         end
@@ -1825,11 +1796,7 @@ local function onTabSelected()
     TweenService:Create(tabFrame, TweenInfo.new(.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {BackgroundTransparency = .85}):Play()
     leftContainer.Visible = true
     rightContainer.Visible = true
-end
-
-tabTextButton.MouseButton1Click:Connect(onTabSelected)
-tabTextButton.TouchTap:Connect(onTabSelected)
-
+end)
 
 function tab:Select()
     TabSelected = tabFrame
