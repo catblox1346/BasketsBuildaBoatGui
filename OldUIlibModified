@@ -368,13 +368,19 @@ closeButton.MouseButton1Click:Connect(closeUI)
 closeButton.TouchTap:Connect(closeUI)
 
 
-closeButton.MouseEnter:Connect(function()
+local function onHoverStart()
     TweenService:Create(closeButton, TweenInfo.new(.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageColor3 = Color3.fromRGB(217, 97, 99)}):Play()
-end)
+end
 
-closeButton.MouseLeave:Connect(function()
+local function onHoverEnd()
     TweenService:Create(closeButton, TweenInfo.new(.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageColor3 = Color3.fromRGB(217, 217, 217)}):Play()
-end)
+end
+
+closeButton.MouseEnter:Connect(onHoverStart)
+closeButton.MouseLeave:Connect(onHoverEnd)
+closeButton.TouchTap:Connect(onHoverStart)  -- Start hover effect on touch
+closeButton.TouchEnded:Connect(onHoverEnd)  -- End hover effect on touch
+
 
 local minimizeButton = Instance.new("ImageButton")
 minimizeButton.Name = "MinimizeButton"
