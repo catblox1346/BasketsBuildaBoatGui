@@ -368,19 +368,13 @@ closeButton.MouseButton1Click:Connect(closeUI)
 closeButton.TouchTap:Connect(closeUI)
 
 
-local function onHoverStart()
+closeButton.MouseEnter:Connect(function()
     TweenService:Create(closeButton, TweenInfo.new(.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageColor3 = Color3.fromRGB(217, 97, 99)}):Play()
-end
+end)
 
-local function onHoverEnd()
+closeButton.MouseLeave:Connect(function()
     TweenService:Create(closeButton, TweenInfo.new(.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageColor3 = Color3.fromRGB(217, 217, 217)}):Play()
-end
-
-closeButton.MouseEnter:Connect(onHoverStart)
-closeButton.MouseLeave:Connect(onHoverEnd)
-closeButton.TouchTap:Connect(onHoverStart)  -- Start hover effect on touch
-closeButton.TouchEnded:Connect(onHoverEnd)  -- End hover effect on touch
-
+end)
 
 local minimizeButton = Instance.new("ImageButton")
 minimizeButton.Name = "MinimizeButton"
@@ -393,19 +387,13 @@ minimizeButton.Size = UDim2.new(0, 17, 0, 17)
 minimizeButton.ZIndex = 2
 minimizeButton.Parent = topbar
 
-local function onHoverStart()
+minimizeButton.MouseEnter:Connect(function()
     TweenService:Create(minimizeButton, TweenInfo.new(.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageColor3 = Color3.fromRGB(194, 162, 76)}):Play()
-end
+end)
 
-local function onHoverEnd()
+minimizeButton.MouseLeave:Connect(function()
     TweenService:Create(minimizeButton, TweenInfo.new(.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {ImageColor3 = Color3.fromRGB(217, 217, 217)}):Play()
-end
-
-minimizeButton.MouseEnter:Connect(onHoverStart)
-minimizeButton.MouseLeave:Connect(onHoverEnd)
-minimizeButton.TouchTap:Connect(onHoverStart)  -- Start hover effect on touch
-minimizeButton.TouchEnded:Connect(onHoverEnd)  -- End hover effect on touch
-
+end)
 
 local Opened = true
 
