@@ -1,3 +1,6 @@
+
+print('worked')
+
 local CoreGui = game:GetService("CoreGui")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -1847,4 +1850,4 @@ return window
 end
 
 return library
-print('worked')
+
